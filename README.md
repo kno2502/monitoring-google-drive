@@ -1,18 +1,15 @@
-# Google Drive Permission Search
+# Monitoring Google Drive
 
-Search/List your Google Drive's Documents.
+Search/List Google Drive's Documents on your domain.
 
 Requirements:
 - Ruby 2.0.0 or higher
 
 # Installation
 
-This script is originated by google-api-ruby-client-samples.
+This script is originated by google-drive-permission-search.
 
-https://github.com/google/google-api-ruby-client-samples/tree/master/drive
-
-- Get your client_secrets.json file from Google API Console
-- Save your client_secrets.json to project root
+https://github.com/morimorihoge/google-drive-permission-search
 
 For installation:
 
@@ -23,12 +20,11 @@ bundle
 # Usage
 
 ```
-bundle exec ./google-drive-permission-search.rb --verbose --type excel
+bundle exec ./monitoring-google-drive.rb --verbose --admin admin@example.com
 ```
 
 # Options
 
-- -type: "excel" or "tsv" is available (default: excel)
-- -f FILE_NAME: specify output file name (default: result.(xls|tsv)])
 - -v, --verbose: output debug messages
-- --only-includes TEXT: output data which includes "TEXT" string only
+- --admin <email>: domain administrator account
+- --owner <email>: owner account
