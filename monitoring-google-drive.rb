@@ -137,7 +137,7 @@ end
 
 results = []
 owners.each do |owner|
-  client, drive, directory = setup(owner)
+  client, drive, directory = setup(issuer, owner)
   dircache = DirectoryCache.new(client, drive)
   all_files_result = get_files(client, drive, owner)
   all_files_result.data.items.each do |file|
