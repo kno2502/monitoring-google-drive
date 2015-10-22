@@ -20,7 +20,7 @@ bundle
 # Usage
 
 ```
-bundle exec ./monitoring-google-drive.rb --verbose --admin admin@example.com
+bundle exec ./monitoring-google-drive.rb --verbose --issuer 999999999999-0123456789abcdefghijklmnopqrstuv@developer.gserviceaccount.com --admin admin@example.com
 ```
 
 # Options

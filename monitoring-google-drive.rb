@@ -10,7 +10,7 @@ APPLICATION_VERSION = '1.0.0'
 
 debug = false
 
-def setup(owner)
+def setup(issuer, owner)
   client = Google::APIClient.new(:application_name    => APPLICATION_NAME,
                                  :application_version => APPLICATION_VERSION)
   key = Google::APIClient::PKCS12.load_key('monitoring-google-drive.p12', 'notasecret')
@@ -18,7 +18,7 @@ def setup(owner)
     :token_credential_uri => 'https://accounts.google.com/o/oauth2/token',
     :audience             => 'https://accounts.google.com/o/oauth2/token',
     :scope                => ['https://www.googleapis.com/auth/drive.readonly', 'https://www.googleapis.com/auth/admin.directory.user.readonly'],
-    :issuer               => '187535567088-0tfd71844ivdfcgatf4dqnj904kgu4q3@developer.gserviceaccount.com',
+    :issuer               => issuer,
     :signing_key          => key,
     :sub                  => owner
   )
@@ -87,11 +87,6 @@ opt.on('-v', '--verbose') do |v|
   debug = true
 end
 
-file_name = nil
-opt.on('-f FILENAME') do |name|
-  file_name = name
-end
-
 owner = nil
 opt.on('--owner EMAIL') do |email|
   owner = email
@@ -100,6 +95,11 @@ end
 admin = nil
 opt.on('--admin EMAIL') do |email|
   admin = email
+end
+
+issuer = nil
+opt.on('--issuer EMAIL') do |email|
+  issuer = email
 end
 
 opt.parse!(ARGV)
@@ -120,12 +120,16 @@ def get_permissions(client, drive, file_id)
   }
 end
 
+if issuer.nil?
+  raise "Required option: --issuer"
+end
+
 owners = []
 if owner.nil?
   if admin.nil?
     raise "Required option: --admin or --owner"
   end
-  client, drive, directory = setup(admin)
+  client, drive, directory = setup(issuer, admin)
   owners = get_all_users(client, directory).map{|u| u.primary_email}
 elsif
   owners << owner
