@@ -68,15 +68,13 @@ class DirectoryCache
     ).data
   end
 
-  def get_parent(parents, ret = [])
-    return ret if parents.empty?
-    data = get_dir(parents.first.id)
+  def get_parent(parent_id, ret = [])
+    data = get_dir(parent_id)
     ret.unshift(data.title)
-    if data.parents.empty?
-      ret
-    else
-      get_parent(data.parents, ret)
-    end
+    data.parents.map{|parent|
+      get_parent(parent.id, ret)
+    }
+    ret
   end
 end
 
@@ -145,11 +143,13 @@ owners.each do |owner|
       STDERR.puts "fetching id: #{file.id}, title: #{file.title}..."
     end
 
-    results.push({
-      :owner => get_owners(file.owners).join(','),
-      :title => dircache.get_parent(file.parents, []).join('/') + '/' + file.title,
-      :permissions => get_permissions(client, drive, file.id).join(',')
-    })
+    file.parents.each do |parent|
+      results.push({
+	:folder_owner => get_owners(dircache.get_dir(parent.id).owners),
+	:title => dircache.get_parent(parent.id, []).join('/') + '/' + file.title,
+	:permissions => get_permissions(client, drive, file.id).join(',')
+      })
+    end
   end
 end
 
